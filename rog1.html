@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html><body></body>
+<script>
+
+var canvas = document.createElement('canvas');
+document.body.style='display:flex; justify-content:center'
+var cxt = canvas.getContext("2d");
+document.body.appendChild(canvas);
+const width = canvas.width = 480;
+const height = canvas.height = 480;
+hero = new Image();
+hero.src = 'heroesheet.png';
+
+map = new Image();
+map.src = 'A+_bft.png';
+
+chest = new Image();
+chest.src = 'chest.png';
+
+var mx = 400;
+var my = 400;
+const sprwidth = 92;
+const sprheight = 105;
+let playframe = 0;
+let slowframe = 10;
+kadr = 0
+animline = 0
+let long = 0
+var gold = 0
+var hp = 100
+var othermenu = 0
+class monster{
+
+    constructor(pic,x,y){
+        this.img = pic;
+        this.posx = x;
+        this.posy = y;
+    }
+
+    draw(){
+        cxt.drawImage(this.img, mx-this.posx, my-this.posy, 80, 80)
+    }
+    move() {
+        
+        if((this.posx+335>mx)&&(this.posx-335<mx))   {
+        if(this.posx+235 > mx ){this.posx -= 0.5}
+        if(this.posx+235 < mx ){this.posx += 0.5}
+        if(this.posy+235 < my ){this.posy += 0.5}
+        if(this.posy+235 > my ){this.posy -= 0.5}}
+    }  
+     
+           }
+  
+monst = new Image();
+monst.src='8m1dykjib0951.webp'
+tuga = new monster(monst, 200, 200)
+class item{
+    constructor(pic,x,y){
+        this.img = pic;
+        this.posx = x;
+        this.posy = y;
+    }
+
+    draw(){
+        cxt.drawImage(this.img, mx-this.posx, my-this.posy, 40, 40)
+    }
+}
+var loot = [ch1 = new item(chest,100, 100), ch2 = new item(chest,440, 331), ch3 = new item(chest,324, 230), ch4 = new item(chest,481, 365)]
+
+var stena = new item
+
+function animate(){
+    cxt.clearRect(0,0,width,height);
+    requestAnimationFrame(animate);
+    cxt.clearRect(0,0,width,height);
+    cxt.drawImage(map, mx-800, my-800, width+800, height+800);
+    cxt.drawImage(hero, kadr*sprwidth, animline*sprwidth, sprwidth, sprheight, width/2, height/2, 50, 50)
+    
+    if (playframe%slowframe==0){
+    if(kadr<=long){
+    kadr++;
+    }
+    else kadr = 0;}
+    playframe++
+    if(animline==2.38){
+        kadr = 0
+
+    
+    }
+    if(othermenu < 1){
+    cxt.fillStyle='#fabb00'
+    cxt.font = 'bold 20pt arial'
+    cxt.fillText(`Золото: ${gold}`, 10, 40)
+    cxt.fillStyle='#ff0000'
+    cxt.font = 'bold 20pt arial'
+    cxt.fillText(`Здоровье: ${hp}`, 10, 460)
+    cxt.fillStyle='#fabb00'
+    cxt.font = 'bold 15pt arial'
+    cxt.fillText(`Найдено сундуков: ${gold}/4`, 10, 80)}
+    if(othermenu > 0){
+    cxt.fillStyle='#ffffff'
+    cxt.font = 'bold 20pt arial'
+    cxt.fillText(`Взаимодействие: Enter`, 10, 40)
+    cxt.fillStyle='#ffffff'
+    cxt.font = 'bold 15pt arial'
+    cxt.fillText(`Переключение ответов в диалогах: Down, Up`, 10, 80)
+    cxt.fillStyle='#ffffff'
+    cxt.font = 'bold 20pt arial'
+    cxt.fillText(`Передвижение: W, A, S , D`, 10, 120)}
+    tuga.draw()
+    tuga.move()
+    console.log(mx, my);
+    function collide(item){
+        if((item.posx + 235 < mx) && (item.posx + 265 > mx) && (item.posy + 235 <my) && (item.posy + 265 > my)){
+            console.log('match')
+            item.posx = 100000
+            gold += 1
+        }}
+    function collide1(monster){
+    if((monster.posx + 215 < mx) && (monster.posx + 240 > mx) && (monster.posy + 215 < my) && (monster.posy + 240 > my)){   
+        hp -= 0
+        }}
+        loot.forEach((elem) => {elem.draw() 
+            collide(elem)})
+        collide1(tuga)
+        
+
+        if(hp <= 0){
+    console.log('u lose')
+    cxt.fillStyle='#ffffff'
+    cxt.font = 'bold 20pt arial'
+    cxt.fillText(`Вы проиграли,`, 70, 200)
+    cxt.fillStyle='#ffffff'
+    cxt.font = 'bold 20pt arial'
+    cxt.fillText(`пожалуйста не двигайтесь!`, 70, 230)
+    cancelAnimationFrame(animate())
+    
+}    
+if((gold == 4)&&(hp>2)){
+    cancelAnimationFrame(animate())
+    console.log('u win')
+    cxt.fillStyle='#ffffff'
+    cxt.font = 'bold 40pt arial'
+    cxt.fillText(`Вы выиграли!`, 70, 200)
+}
+
+//Начало создания стен
+if((450 <my) && (670 > my) && (mx<245)&&(mx>65)){
+            console.log('stena')
+            mx=lastx
+            my = lasty            
+}
+
+if((670<my)&&(935>my)&&(mx<90)&&(mx>80)){
+    console.log('stena')
+            mx=lastx
+            my = lasty 
+}
+if((900<my)&&(930>my)&&(mx<175)&&(mx>90)){
+    console.log('stena')
+            mx=lastx
+            my = lasty 
+}
+if((905<my)&&(1050>my)&&(mx<180)&&(mx>165)){
+    console.log('stena')
+            mx=lastx
+            my = lasty 
+}
+if((1050<my)&&(1060>my)&&(mx<485)&&(mx>165)){
+    console.log('stena')
+            mx=lastx
+            my = lasty 
+}
+if((905<my)&&(1050>my)&&(mx<490)&&(mx>470)){
+    console.log('stena')
+            mx=lastx
+            my = lasty 
+}
+if((670<my)&&(935>my)&&(mx<570)&&(mx>550)){
+    console.log('stena')
+            mx=lastx
+            my = lasty 
+}
+if((905<my)&&(930>my)&&(mx>490)&&(mx<560)){
+    console.log('stena')
+            mx=lastx
+            my = lasty 
+}
+if((450 <my) && (670 > my) && (mx<535)&&(mx>415)){
+            console.log('stena')
+            mx=lastx
+            my = lasty            
+}
+if((510 <my) && (670 > my) && (mx<570)&&(mx>435)){
+            console.log('stena')
+            mx=lastx
+            my = lasty            
+}
+if((660 <my) && (680 > my) && (mx<1000)&&(mx>580)){
+            console.log('stena')
+            mx=lastx
+            my = lasty            
+}
+}
+var igra=animate()
+function lose(){console.log(абоба)}
+
+let lastx =mx
+let lasty =my
+document.addEventListener('keydown', ({keyCode})=>{
+switch (keyCode){
+case 87: 
+animline = 6.75;
+lastx =mx
+lasty =my
+my +=5
+break;
+case 68: 
+lastx =mx
+lasty =my
+animline = 7.8;
+mx -= 5;
+break;
+case 65:
+lastx =mx
+lasty =my
+animline = 5.65;
+mx += 5;
+break;
+case 83:
+lastx =mx
+lasty =my
+animline = 4.5;
+my -= 5
+break;
+case 74:
+if(othermenu==0){othermenu = 1}
+console.log(othermenu)
+break;
+}})
+
+document.addEventListener('keyup', ({keyCode})=>{
+switch (keyCode){
+case 87: 
+animline = 2.38;
+long = 0
+slowframe = 10
+break;
+case 68: 
+animline = 3.5
+long = 1
+slowframe = 10;
+break;
+case 65:
+animline = 1.13;
+long = 1
+slowframe = 10;
+break;
+case 83:
+animline = 0.15;
+long = 1;
+slowframe = 10;
+break;
+case 74:
+othermenu = 0
+console.log(othermenu)
+break;
+}});
+///&& (my < item.posy - 245) && (my > item.posy + 245)
+//, ch2 = new item(chest, 478, 210),ch3 = new item(chest, 560, 310), ch4 = new item(chest, 645, 298), ch5 = new item(chest, 350, 176) 
+
+</script></html>
