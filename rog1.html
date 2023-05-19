@@ -1,8 +1,80 @@
 <!DOCTYPE html>
-<html><body></body>
-<script>
+<html><head><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"></head><body>
+    <div class="dia" id = 'dialogwindow1'>
+    <p class="string1" id = 'string1'></p>
+    <p class="string2" id = 'string2'></p>
+    <p class="string3" id = 'string3'></p>
+    <p class="string4" id = 'string4'></p></div>
+    <audio controls>
+    </audio>
+</body>
+<style>
+.dia{
+    width: 480px;
+    height: 150px;
+    background-color: none;
+    position: fixed;
+    left: 360px;
+    top: 500px;
+    z-index: 9;
+}
 
-var canvas = document.createElement('canvas');
+.string1{
+    color: white;
+    font-size: 25px;
+    z-index: 10;
+    font-weight: 900;
+    position:relative;
+    width: 440px;
+    padding: 3px;
+    top:-20px;
+    left:10px;
+    font-family: 'Roboto', sans-serif;}
+    .string2{
+    color: white;
+    font-size: 25px;
+    z-index: 10;
+    font-weight: 900;
+    position:relative;
+    top:-35px;
+    left:10px;
+    width: 440px;
+    padding: 3px;
+    border: 2px solid none;
+    font-family: 'Roboto', sans-serif;}
+    .string3{
+    color: white;
+    padding: 3px;
+    font-size: 25px;
+    z-index: 10;
+    font-weight: 900;
+    border: 2px solid none;
+    position:relative;
+    width: 440px;
+    top:-45px;
+    left:10px;
+    font-family: 'Roboto', sans-serif;}
+    .string4{
+    color: white;
+    padding: 3px;
+    font-size: 25px;
+    z-index: 10;
+    font-weight: 900;
+    border: 2px solid none;
+    position:relative;
+    width: 440px;
+    top:-45px;
+    left:10px;
+    font-family: 'Roboto', sans-serif;}
+     
+
+</style>
+<script>
+var canvas = document.createElement('canvas')
+canvas.className='canv'
+
 document.body.style='display:flex; justify-content:center'
 var cxt = canvas.getContext("2d");
 document.body.appendChild(canvas);
@@ -17,43 +89,76 @@ map.src = 'A+_bft.png';
 chest = new Image();
 chest.src = 'chest.png';
 
+tpcrystal = new Image()
+tpcrystal.src='giphy.gif'
+
+foccrystal = new Image();
+foccrystal.src = 'focuscryst-removebg-preview.png'
+
 var mx = 400;
 var my = 400;
 const sprwidth = 92;
 const sprheight = 105;
 let playframe = 0;
-let slowframe = 10;
-kadr = 0
-animline = 0
+let slowframe = 30;
+var kadr = 0
+var animline = 0
 let long = 0
 var gold = 0
 var hp = 100
 var othermenu = 0
+var gameEnd = 0
+var pudgemove = 0
+var isdialog=0
+var paimonanswer = 0
+var paimonisreadytonext =  0
+var collectedcrystals = 0
+var placedcrystals = 0
+var teleportdialog = 0
+iscrystalworking = 0
+dontworkcrystaldialog=0
+readycrystaldialog = 0
+var dialogvariant = 0
+var isvariantdialog = 0
+var selecteddialog = 0
+var collectedchest = 0
+
+
+const string1 = document.getElementById('string1')
+const string2 = document.getElementById('string2')
+const string3 = document.getElementById('string3')
+
+
 class monster{
 
     constructor(pic,x,y){
         this.img = pic;
         this.posx = x;
         this.posy = y;
+        
+        
     }
-
+    
     draw(){
         cxt.drawImage(this.img, mx-this.posx, my-this.posy, 80, 80)
-    }
+    } 
+    
     move() {
-        
-        if((this.posx+335>mx)&&(this.posx-335<mx))   {
+        if((mx > 605) && (mx < 985) && (my > 330) && (my <660)){pudgemove += 1}
+        if(pudgemove > 0){
         if(this.posx+235 > mx ){this.posx -= 0.5}
         if(this.posx+235 < mx ){this.posx += 0.5}
         if(this.posy+235 < my ){this.posy += 0.5}
         if(this.posy+235 > my ){this.posy -= 0.5}}
+        
     }  
-     
-           }
+}
+    
+           
   
 monst = new Image();
-monst.src='8m1dykjib0951.webp'
-tuga = new monster(monst, 200, 200)
+monst.src='8m1dykjib0951.png'
+tuga = new monster(monst, 600, 300)
 class item{
     constructor(pic,x,y){
         this.img = pic;
@@ -65,16 +170,58 @@ class item{
         cxt.drawImage(this.img, mx-this.posx, my-this.posy, 40, 40)
     }
 }
+class item2{
+    constructor(pic,x,y){
+        this.img = pic;
+        this.posx = x;
+        this.posy = y;
+    }
+
+    draw(){
+        cxt.drawImage(this.img, mx-this.posx, my-this.posy, 200, 100)
+    }
+}
+class item3{
+    constructor(pic,x,y){
+        this.img = pic;
+        this.posx = x;
+        this.posy = y;
+    }
+
+    draw(){
+        cxt.drawImage(this.img, mx-this.posx, my-this.posy, 60, 60)
+    }
+    backcrystal(){
+            if(this.posx == 100000){
+                this.posx = mx-235
+                this.posy = my-235
+            }
+        }
+}
+var cr1 = new item3(foccrystal, -155-235, 250-235)
+var cr2 = new item3(foccrystal, 135-235, -165-235)
+var cr3 = new item3(foccrystal, 885-235, 270-235)
+var cr4 = new item3(foccrystal, 195-235, 995-235)
+var cr5 = new item3(foccrystal, 100000, 100)
+var cr6 = new item3(foccrystal, 100000, 100)
+var cr7 = new item3(foccrystal, 100000, 100)
+var cr8 = new item3(foccrystal, 100000, 100)
+
 var loot = [ch1 = new item(chest,100, 100), ch2 = new item(chest,440, 331), ch3 = new item(chest,324, 230), ch4 = new item(chest,481, 365)]
 
+let tpcrystal1 = new item2(tpcrystal, 155, 650);
 var stena = new item
-
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 function animate(){
     cxt.clearRect(0,0,width,height);
     requestAnimationFrame(animate);
     cxt.clearRect(0,0,width,height);
     cxt.drawImage(map, mx-800, my-800, width+800, height+800);
     cxt.drawImage(hero, kadr*sprwidth, animline*sprwidth, sprwidth, sprheight, width/2, height/2, 50, 50)
+    
+   
     
     if (playframe%slowframe==0){
     if(kadr<=long){
@@ -87,16 +234,14 @@ function animate(){
 
     
     }
+
     if(othermenu < 1){
     cxt.fillStyle='#fabb00'
     cxt.font = 'bold 20pt arial'
     cxt.fillText(`Золото: ${gold}`, 10, 40)
     cxt.fillStyle='#ff0000'
     cxt.font = 'bold 20pt arial'
-    cxt.fillText(`Здоровье: ${hp}`, 10, 460)
-    cxt.fillStyle='#fabb00'
-    cxt.font = 'bold 15pt arial'
-    cxt.fillText(`Найдено сундуков: ${gold}/4`, 10, 80)}
+    cxt.fillText(`Здоровье: ${hp}`, 10, 460)}
     if(othermenu > 0){
     cxt.fillStyle='#ffffff'
     cxt.font = 'bold 20pt arial'
@@ -109,40 +254,53 @@ function animate(){
     cxt.fillText(`Передвижение: W, A, S , D`, 10, 120)}
     tuga.draw()
     tuga.move()
+    tpcrystal1.draw()
     console.log(mx, my);
     function collide(item){
         if((item.posx + 235 < mx) && (item.posx + 265 > mx) && (item.posy + 235 <my) && (item.posy + 265 > my)){
             console.log('match')
             item.posx = 100000
-            gold += 1
+            collectedchest += 1
+            gold += getRandomInt(5)
+        }}
+    function collide2(item3){
+    if((item3.posx + 235 < mx) && (item3.posx + 265 > mx) && (item3.posy + 235 <my) && (item3.posy + 265 > my)){
+            console.log('matchcrystal')
+            item3.posx = 100000
+            collectedcrystals += 1
         }}
     function collide1(monster){
     if((monster.posx + 215 < mx) && (monster.posx + 240 > mx) && (monster.posy + 215 < my) && (monster.posy + 240 > my)){   
-        hp -= 0
+        //hp
         }}
         loot.forEach((elem) => {elem.draw() 
             collide(elem)})
         collide1(tuga)
+        cr1.draw();
+        cr2.draw()
+        cr3.draw()
+        cr4.draw()
+        cr5.draw()
+        cr6.draw()
+        cr7.draw()
+        cr8.draw()
+        collide2(cr1)
+        collide2(cr2)
+        collide2(cr3)
+        collide2(cr4)
+   
         
-
+        
         if(hp <= 0){
     console.log('u lose')
     cxt.fillStyle='#ffffff'
     cxt.font = 'bold 20pt arial'
-    cxt.fillText(`Вы проиграли,`, 70, 200)
-    cxt.fillStyle='#ffffff'
-    cxt.font = 'bold 20pt arial'
-    cxt.fillText(`пожалуйста не двигайтесь!`, 70, 230)
-    cancelAnimationFrame(animate())
+    cxt.fillText(`Вы проиграли`, 70, 200)
+    hp = 0
+    gameEnd = 1
     
 }    
-if((gold == 4)&&(hp>2)){
-    cancelAnimationFrame(animate())
-    console.log('u win')
-    cxt.fillStyle='#ffffff'
-    cxt.font = 'bold 40pt arial'
-    cxt.fillText(`Вы выиграли!`, 70, 200)
-}
+
 
 //Начало создания стен
 if((450 <my) && (670 > my) && (mx<245)&&(mx>65)){
@@ -201,13 +359,78 @@ if((660 <my) && (680 > my) && (mx<1000)&&(mx>580)){
             mx=lastx
             my = lasty            
 }
+if((mx<1000)&&(mx>980)&&(my > 160)&&(my<660)){mx = lastx; my=lasty; console.log('stena')}
+if((mx<980)&&(mx>750)&&(my < 175 )&&(my > 165)){mx = lastx; my=lasty; console.log('stena')}
+if((mx<760)&&(mx>745)&&(my < 160)&&(my > -75)){mx = lastx; my=lasty; console.log('stena')}
+if((mx<745)&&(mx>170)&&(my < -80)&&(my >-200)){mx = lastx; my=lasty; console.log('stena')}
+if((mx<-20)&&(mx>-210)&&(my <-80)&&(my > -200)){mx = lastx; my=lasty; console.log('stena')}
+if((mx<65)&&(mx>-85)&&(my <670)&&(my >655)){mx = lastx; my=lasty; console.log('stena')}
+if((mx<-70)&&(mx>-100)&&(my <660)&&(my >280)){mx = lastx; my=lasty; console.log('stena')}
+if((mx<-85)&&(mx>-205)&&(my <290)&&(my >275)){mx = lastx; my=lasty; console.log('stena')}
+if((mx<-205)&&(mx>-215)&&(my <285)&&(my >-205)){mx = lastx; my=lasty; console.log('stena')}
+if((mx<170)&&(mx>-20)&&(my <-185)&&(my >-195)){mx = lastx; my=lasty; console.log('stena')}
+
+//Конец стен
+console.log(dialogvariant)
+if((teleportdialog == 1)&&(selecteddialog==1)){
+isvariantdialog = 0
+gameEnd = 1
+string1.innerHTML = 'Поздравляем, вы прошли игру!'
+string2.innerHTML = 'Разработчик: Zorex'
+string3.innerHTML = 'Музыка: Кай Розенкранц'
+document.getElementById('string4').innerHTML = `Итоговая статистика: Собранно сундуков: ${collectedchest}/4, получено золота: ${gold}`
+    document.getElementById('string2').style.border = '2px solid black'
+    document.getElementById('string3').style.border = '2px solid black'
+    document.getElementById('string1').style.border = '2px solid black'
+document.querySelector('div').style.width = '100%'
+document.querySelector('div').style.height = '100%'
+document.querySelector('div').style.position = 'absolute'
+document.querySelector('div').style.top = '0px'
+document.querySelector('div').style.left = '0px'
+}
+if((teleportdialog==1)&&(selecteddialog==2)){
+    isvariantdialog = 0
+    isdialog = 0
+    teleportdialog = 0
+    selecteddialog = 0
+    dialogvariant = 0
+    document.getElementById('string2').style.border = '2px solid white'
+    document.getElementById('string3').style.border = '2px solid white'
+    
+}
+if(isvariantdialog == 0){
+    document.getElementById('string2').style.border = '2px solid none'
+   document.getElementById('string3').style.border = '2px solid none'   
+}
+if (isdialog > 0){
+document.querySelector('div').style.background='black'
+}
+else{
+document.querySelector('div').style.background='none'
+string1.innerHTML=' '}
+if (my < -180){
+paimonanswer = 1
+my = -190
+isdialog = 1}
+if(paimonanswer == 1){
+string1.innerHTML = 'Вы подошли к концу мира, перед вами раскинулись необъятные просторы, вы захотели пойти туда...'
+paimonanswer = 2
+}
+if(placedcrystals == 4){
+    isdialog = 1
+    readycrystaldialog = 1
+    string1.innerHTML = 'Кристалл пульсирует энергией, похоже его можно снова использовать.'
+}
 }
 var igra=animate()
-function lose(){console.log(абоба)}
+function lose(){console.log('абоба')}
 
 let lastx =mx
 let lasty =my
+
 document.addEventListener('keydown', ({keyCode})=>{
+if(gameEnd < 1){
+if(isdialog <= 0){
 switch (keyCode){
 case 87: 
 animline = 6.75;
@@ -233,10 +456,62 @@ lasty =my
 animline = 4.5;
 my -= 5
 break;
+
+}    
+}
+}
+switch(keyCode){
 case 74:
 if(othermenu==0){othermenu = 1}
 console.log(othermenu)
 break;
+case 13:
+if(paimonanswer == 2){
+string1.innerHTML = 'Вы сделали шаг, вдруг в вашей голове появился женский голос: "Давай пока не пойдем туда"...'
+}
+
+if(paimonanswer == 3){string1.innerHTML='Вы чувствуйте себя, словно упали со скалы, пожалуй лучше правда туда не ходить...'
+}
+
+if(paimonanswer==4){string1.innerHTML=' '}
+   
+
+if((mx < 365)&&(mx > 265)&&(my<915)&&(my>820)){
+    if(iscrystalworking == 0){
+    isdialog = 1
+    dontworkcrystaldialog = 1
+    string1.innerHTML = 'Это кристалл телепортации, он выглядит тусклым и безжизненным, возможно есть способ зарядить его  энергией.'
+}
+    if(iscrystalworking == 1){
+        isvariantdialog = 1
+        isdialog = 1
+        teleportdialog = 1
+        dialogvariant = 0
+        string1.innerHTML = 'Использовать кристалл?:'
+        string2.innerHTML = 'Да.'
+        string3.innerHTML = 'Нет.'
+    }
+}
+
+if(((mx<345)&&(mx>305)&&(my<790)&&(my>745))&&(cr1.posx==100000)){
+    cr5.backcrystal()
+    
+}
+if(((mx<445)&&(mx>400)&&(my<905)&&(my>840))&&(cr2.posx==100000)){
+    cr6.backcrystal()
+    
+}
+if(((mx<350)&&(mx>300)&&(my<1000)&&(my>950))&&(cr3.posx==100000)){
+    cr7.backcrystal()
+    
+}
+if(((mx<255)&&(mx>205)&&(my<905)&&(my>845))&&(cr4.posx==100000)){
+    cr8.backcrystal()
+    
+}
+
+break; 
+
 }})
 
 document.addEventListener('keyup', ({keyCode})=>{
@@ -244,26 +519,91 @@ switch (keyCode){
 case 87: 
 animline = 2.38;
 long = 0
-slowframe = 10
+slowframe = 30
 break;
 case 68: 
 animline = 3.5
 long = 1
-slowframe = 10;
+slowframe = 30;
 break;
 case 65:
 animline = 1.13;
 long = 1
-slowframe = 10;
+slowframe = 30;
 break;
 case 83:
 animline = 0.15;
 long = 1;
-slowframe = 10;
+slowframe = 30;
 break;
 case 74:
 othermenu = 0
 console.log(othermenu)
+break;
+case 13:
+
+    if(paimonanswer ==  2){
+        paimonanswer = 3
+    }
+if(((mx<345)&&(mx>305)&&(my<790)&&(my>745))&&(cr5.posx==mx-235)){
+    collectedcrystals-=1
+    placedcrystals+=1
+    
+}
+if(((mx<445)&&(mx>400)&&(my<905)&&(my>840))&&(cr2.posx==100000)){
+    collectedcrystals-=1
+    placedcrystals+=1
+}
+if(((mx<350)&&(mx>300)&&(my<1000)&&(my>950))&&(cr3.posx==100000)){
+    collectedcrystals-=1
+    placedcrystals+=1
+}
+if(((mx<255)&&(mx>205)&&(my<905)&&(my>845))&&(cr4.posx==100000)){
+    collectedcrystals-=1
+    placedcrystals+=1
+}
+
+break;
+case 16:
+if((teleportdialog == 1)&&(dialogvariant==1)){
+    selecteddialog = 1
+    isvariantdialog = 0
+}
+if((teleportdialog == 1)&&(dialogvariant==2)){
+    selecteddialog = 2
+    isvariantdialog = 0
+}
+if(paimonanswer == 3){
+    paimonanswer = 0
+    isdialog = 0
+}
+if(dontworkcrystaldialog == 1){
+    dontworkcrystaldialog = 0
+    isdialog = 0
+    
+}
+    
+if(readycrystaldialog == 1){
+    readycrystaldialog = 0
+    isdialog = 0
+    placedcrystals = 5
+    iscrystalworking = 1
+}  
+    
+break;
+case 40:
+    if((teleportdialog == 1)){
+        dialogvariant = 2
+        document.getElementById('string3').style.border='2px solid white'
+        document.getElementById('string2').style.border='2px solid black'
+    }
+break;
+case 38:
+if((teleportdialog == 1)){
+    dialogvariant = 1
+    document.getElementById('string2').style.border='2px solid white'
+    document.getElementById('string3').style.border='2px solid black'
+}
 break;
 }});
 ///&& (my < item.posy - 245) && (my > item.posy + 245)
