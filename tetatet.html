@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html><body></body>
+<script src="https://dir.by/example_lib/tree_js/three.js"></script>
+<script type='module'>
+    var scene = new THREE.Scene();
+
+    var camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight, 0.1, 1000)
+
+    camera.position.set(0,0,500)
+
+    var rama = new THREE.TorusKnotBufferGeometry( 100, 30, 1000, 160 );
+
+    
+    var kart = new THREE.TextureLoader().load("https://static.wikia.nocookie.net/gothic/images/c/c2/Thorus_%28Gothic%29.png/revision/latest?cb=20160720095618&path-prefix=pl")
+    var material = new THREE.MeshBasicMaterial({map:kart})
+    
+    var cube = new THREE.Mesh(rama,material) 
+
+    scene.add(cube)
+
+    var renderer = new THREE.WebGLRenderer()
+    renderer.setSize(window.innerWidth/1.5, window.innerHeight/1.5)
+    
+    document.body.appendChild(renderer.domElement)
+    renderer.render(scene,camera)
+
+    function animate(){
+        requestAnimationFrame(animate);
+        
+        renderer.render(scene,camera)
+    }
+
+    
+    
+    document.addEventListener('keydown', ({keyCode})=>{
+switch (keyCode){
+case 87: 
+cube.rotation.x -= 0.05
+break;
+case 68: 
+cube.rotation.y += 0.05
+break;
+case 65:
+cube.rotation.y -= 0.05
+break;
+case 83:
+cube.rotation.x += 0.05
+break;
+}
+})
+
+animate()
+</script>
+</html>

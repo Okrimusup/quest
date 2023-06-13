@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <body>
+
+    </body>
+    <script>
+        var canvas = document.createElement('canvas')
+        var c = canvas.getContext('2d')
+        canvas.width = window.innerWidth-100
+        canvas.height = window.innerHeight-50
+        document.body.appendChild(canvas)
+        var gravity = 0.5
+        var playerp = 0 
+        fon1 = new Image();
+        fon1coord = {x:0};
+        fon1.src='1626794315_31-kartinkin-com-p-panelnie-doma-fon-krasivo-35.jpg'
+        fon2 = new Image();
+        fon2coord = {x:-canvas.width};
+        fon2.src='1626794315_31-kartinkin-com-p-panelnie-doma-fon-krasivo-35.jpg'
+        fon3 = new Image();
+        fon3coord = {x:canvas.width};
+        fon3.src='1626794315_31-kartinkin-com-p-panelnie-doma-fon-krasivo-35.jpg'
+       class Player{
+           constructor(){
+               this.position = {x:800, y:400};
+               this.width=100;
+               this.height = 100;
+               this.velocity = {x:0,y:1}}
+               draw(){
+        c.fillStyle='white'
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        this.position.y+=this.velocity.y
+        this.position.x+=this.velocity.x
+        if((this.position.y + this.height) <= canvas.height){
+            this.velocity.y += gravity;}
+        else{
+        this.velocity.y=0}
+        
+            
+        
+    }
+           
+       }
+       const igrok = new Player();
+       pic = new Image()
+       pic.src='gg.png'
+
+       
+
+       class Platform{
+           constructor(x1,y1){
+               this.position = {x:x1 , y:y1};
+               this.width=200;
+               this.height = 40;
+       }
+       
+
+       draw(){
+           c.fillStyle='white'
+           c.fillRect(this.position.x,this.position.y,this.width,this.height)
+       }}
+       
+       function checkplita(mesto){
+           if((igrok.position.x +igrok.width > mesto.position.x)&&(igrok.position.x<mesto.position.x+mesto.width)){landing(mesto)}
+
+       }
+       
+       
+       function landing(plita1){
+           if ((igrok.position.y+igrok.height <= plita1.position.y + plita1.height)&&
+           (igrok.position.x+igrok.width > plita1.position.x)&&(igrok.position.x < plita1.position.x+plita1.width)){igrok.velocity.y=0}
+           if(igrok.position.y+igrok.height <= plita1.position.y){
+               igrok.velocity.y+= gravity+1
+               igrok.position.y += igrok.velocity.y
+           }
+       }
+       level = [new Platform(200, 100),new Platform(400, 200)]
+       var karta = [200,400]
+       function game(){
+           if (fon3coord.x <= 0){
+               fon1coord.x = 0
+               fon2coord.x = -canvas.width
+               fon3coord.x = canvas.width
+           }
+           if (fon2coord.x >= 0){
+               fon1coord.x = 0
+               fon2coord.x = -canvas.width
+               fon3coord.x = canvas.width
+           }
+           c.clearRect(0,0,canvas.width,canvas.height)
+           c.drawImage(fon1, fon1coord.x,0,canvas.width,canvas.height)
+           c.drawImage(fon2, fon2coord.x,0,canvas.width,canvas.height)
+           c.drawImage(fon3, fon3coord.x,0,canvas.width,canvas.height)
+           igrok.draw()
+           
+           level.forEach(plat => {plat.draw(); checkplita(plat);});
+
+           for(let i=0;  i < karta.length;i++){level[i].position.x =playerp+karta[i]}    
+
+           c.drawImage(pic, igrok.position.x,igrok.position.y,igrok.height,igrok.width)
+        // plita.position.x = playerp + 200
+        //plita2.position.x = playerp + 400
+        //plita.draw()
+        //plita2.draw()
+        //checkplita(plita)
+        //checkplita(plita2)
+          
+       }
+       igra = setInterval(game,20)
+       document.addEventListener('keydown', ({keyCode})=>{
+           console.log(keyCode)
+           switch (keyCode){
+               case 68: igrok.velocity.x=5; 
+playerp -= 5
+fon1coord.x-=3
+               fon2coord.x-=3
+               fon3coord.x-=3
+               if (igrok.position.x > window.innerWidth/3*2){igrok.position.x=window.innerWidth/3*2}
+               break;
+               case 65: igrok.velocity.x=-5 ;
+playerp += 5
+fon1coord.x+=3
+               fon2coord.x+=3
+               fon3coord.x+=3
+
+               if (igrok.position.x < window.innerWidth/3){igrok.position.x=window.innerWidth/3}
+               break;
+               case 32: igrok.velocity.y=-20 ;
+               break;
+
+           }
+       })
+       document.addEventListener('keyup', ({keyCode})=>{
+           switch (keyCode){
+               case 68: igrok.velocity.x=0 ;
+               ///playerp -=5
+               
+               break;
+               case 65: igrok.velocity.x=0 ;
+               ///playerp +=5
+              
+               break;
+               case 32: igrok.velocity.y=0 ;
+               
+               break;
+
+           }
+       })
+    
+    </script>
+</html>
